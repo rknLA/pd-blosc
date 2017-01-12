@@ -1,3 +1,15 @@
+# `blosc` - band-limited oscillators for pd
+
+pd-vanilla's limited support of musical oscillators necessitates more musical options.  blosc aims to help by providing the following anti-aliased oscillators:
+
+* `[saw~]`
+* `[square~]`
+* `[tri~]`
+
+
+The rest of this info comes from the `helloworld` example, and is left here so I don't forget how to build it in two years.
+
+
 An example Pure Data external using [pd-lib-builder](https://github.com/pure-data/pd-lib-builder). You can use this project to bootstrap your own Pure Data external development.
 
 ## Usage ##
