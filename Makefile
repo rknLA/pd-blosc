@@ -3,13 +3,13 @@
 # settings and rules.
 
 # library name
-lib.name = blosc
+lib.name = saw~
 
 # input source file (class name == source file basename)
-class.sources = blosc.c
+class.sources = saw~.c
 
 # all extra files to be included in binary distribution of the library
-datafiles = blosc-help.pd blosc-meta.pd README.md
+datafiles = saw~-help.pd saw~-meta.pd README.md
 
 # include Makefile.pdlibbuilder from submodule directory 'pd-lib-builder'
 PDLIBBUILDER_DIR=pd-lib-builder/
