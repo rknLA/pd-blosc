@@ -6,6 +6,9 @@ pd-vanilla's limited support of musical oscillators necessitates more musical op
 * `[square~]`
 * `[tri~]`
 
+Sine-wave reference:
+- https://gist.github.com/wrl/9913185
+
 
 The rest of this info comes from the [`helloworld`](https://github.com/pure-data/helloworld) example, and is left here so I don't forget how to build it in two years.
 
