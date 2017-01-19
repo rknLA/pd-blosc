@@ -1,5 +1,26 @@
-#N canvas 702 334 450 300 10;
-#X obj 16 69 helloworld;
-#X msg 16 37 bang;
-#X text 13 10 prints "Hello world!" when banged.;
-#X connect 1 0 0 0;
+#N canvas 313 608 779 512 10;
+#X obj 64 95 saw~;
+#X text 13 10 anti-aliased sawtooth oscillator;
+#X obj 64 175 dac~;
+#X floatatom 85 123 5 0 0 0 - - -, f 5;
+#X msg 278 75 \; metro 0;
+#X msg 277 16 \; pd dsp 1 \; metro 1;
+#X text 362 35 <-Click to start;
+#X text 355 84 <-Click to stop;
+#N canvas 0 22 450 278 (subpatch) 0;
+#X array array1 100 float 3;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0;
+#X coords 0 1 100 -1 200 140 1;
+#X restore 33 252 graph;
+#X floatatom 64 67 5 0 0 0 - - -, f 5;
+#X obj 64 34 loadbang;
+#X obj 64 147 *~ 1;
+#X connect 0 0 11 0;
+#X connect 3 0 11 1;
+#X connect 9 0 0 0;
+#X connect 10 0 9 0;
+#X connect 11 0 2 0;
+#X connect 11 0 2 1;
