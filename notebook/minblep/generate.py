@@ -3,6 +3,40 @@ from itertools import izip
 import numpy as np
 
 
+def gen_pure_saw(osc_freq, sample_rate, num_samples, initial_phase=0):
+    peak_amplitude = 1.0
+    two_pi = 2.0 * np.pi
+    phase = initial_phase
+    for i in range(0, num_samples):
+        out_amp = peak_amplitude - (peak_amplitude / np.pi * phase)
+        phase = phase + ((2 * np.pi * osc_freq) / sample_rate)
+        if phase >= two_pi:
+            phase -= two_pi
+        yield out_amp
+
+
+def gen_bl_saw(blep_buffer, osc_freq, sample_rate, num_samples, initial_phase=0):
+    blep_size = len(blep_buffer)
+    blep_pointers = []
+    
+    peak_amplitude = 1.0
+    two_pi = 2.0 * np.pi
+    phase = initial_phase
+    for i in range(0, num_samples):
+        out_amp = peak_amplitude - (peak_amplitude / np.pi * phase)
+        
+        for ptr in blep_pointers:
+            out_amp *= blep_buffer[ptr]
+        blep_pointers = [(ptr + 1) for ptr in blep_pointers if ptr + 1 < blep_size]
+        
+        phase = phase + ((2 * np.pi * osc_freq) / sample_rate)
+        if phase >= two_pi:
+            phase -= two_pi
+            blep_pointers.append(0)
+
+        yield out_amp
+
+
 def generate_min_blep(zero_crossings, sample_rate):
     size = (2 * zero_crossings * sample_rate) + 1
     signal = list(windowed_sinc(blackman_window, size, zero_crossings))
