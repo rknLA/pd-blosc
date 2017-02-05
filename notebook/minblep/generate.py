@@ -3,7 +3,9 @@ from itertools import izip
 import numpy as np
 
 
-def gen_pure_saw(osc_freq, sample_rate, num_samples, initial_phase=0):
+TAU = 2.0 * np.pi
+
+def gen_naive_saw(osc_freq, sample_rate, num_samples, initial_phase=0):
     peak_amplitude = 1.0
     two_pi = 2.0 * np.pi
     phase = initial_phase
@@ -13,6 +15,19 @@ def gen_pure_saw(osc_freq, sample_rate, num_samples, initial_phase=0):
         if phase >= two_pi:
             phase -= two_pi
         yield out_amp
+
+
+def gen_additive_saw(osc_freq, sample_rate, num_samples):
+    # thanks @wrl
+    nyquist = sample_rate / 2.0
+    harmonics_range = range(1, int(math.ceil(nyquist / osc_freq)))
+    harmonics_freqs = (osc_freq * x for x in sine_range)
+
+    end_phases = [((TAU * f) / sample_rate) * num_samples
+                  for f in harmonics_freqs]
+    sines = [np.sin(np.linspace(0, end_phase, num_samples)) / (i + 1.0)
+             for (i, end_phase) in enumerate(end_phases)]
+    return np.sum(sines, axis=0) / 2.0
 
 
 def gen_bl_saw(blep_buffer, osc_freq, sample_rate, num_samples, initial_phase=0):
@@ -107,3 +122,26 @@ def normalize(signal):
     scale = 1.0 / sig[-1]
     normalized = [x * scale for x in sig]
     return normalized
+
+
+def polyblep_2sample(phase, phase_step):
+    if phase < phase_step:
+        t = phase / phase_step
+        return (t*2) - (t**2) - 1.0
+    
+    if phase > (1.0 - phase_step):
+        t = (phase - 1.0) / phase_step
+        return (t**2) + (t*2) + 1.0
+    
+    return 0.0
+
+
+def gen_polyblep_saw(osc_freq, sample_rate, nsamples):
+    end_phase = (osc_freq / float(sample_rate)) * nsamples
+    
+    phases = np.mod(np.linspace(0, end_phase, nsamples), 1.0)
+    
+    step = phases[1] - phases[0]
+    polyblep = [polyblep_2sample(x, step) for x in phases]
+    
+    return (1.0 - (2.0 * phases)) + polyblep

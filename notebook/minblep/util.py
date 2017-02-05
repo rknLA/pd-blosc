@@ -3,6 +3,9 @@ from math import ceil
 import numpy as np
 from matplotlib.pyplot import plot, xlabel, ylabel, ylim
 
+from generate import generate_min_blep
+from generate import gen_bl_saw
+
 
 def plot_spectrum(signal, sample_rate):
     # http://samcarcagno.altervista.org/blog/basic-sound-processing-python/
@@ -22,3 +25,17 @@ def plot_spectrum(signal, sample_rate):
     xlabel('Frequency (kHz)')
     ylabel('Power (dB)')
     ylim(ymin=-100)
+
+
+def listen(zero_crossings, oversampling, frequency, duration_seconds):
+    mb_gen = generate_min_blep(zero_crossings, oversampling)
+    the_blep = [val * 2 - 1 for val in mb_gen]
+    oversample_rate = oversampling * SAMPLE_RATE
+    saw_gen = gen_bl_saw(the_blep,
+                         frequency,
+                         oversample_rate,
+                         int(duration_seconds * oversample_rate),
+                         np.pi)
+    the_wave = np.array(list(saw_gen))
+    return Audio(the_wave, rate=oversample_rate)
+
