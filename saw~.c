@@ -51,33 +51,59 @@ typedef struct _saw_tilde {
   t_float x_freq;
   t_float x_conv;
   double x_phase;
+  double x_last_phase;
   t_outlet *x_out;
 } t_saw_tilde;
+
+double polyblep_sample(double phase, double phase_step)
+{
+    double t;
+    if (phase < phase_step) {
+        t = phase / phase_step;
+        return (t * 2) - (t * t) - 1.0;
+    }
+
+    if (phase > (1.0 - phase_step)) {
+        t = (phase - 1.0) / phase_step;
+        return (t * t) + (t * 2) + 1.0;
+    }
+
+    return 0.0;
+}
 
 t_int *saw_tilde_perform(t_int *w)
 {
     t_saw_tilde *x = (t_saw_tilde *)(w[1]);
-    t_sample *in =  (t_sample *)(w[2]);
-    t_sample *out = (t_sample *)(w[3]);
-    int n = (int)(w[4]);
-    double dphase = x->x_phase + (double)UNITBIT32;
-    union tabfudge tf;
-    int normhipart;
-    float conv = x->x_conv;
+    /*
+     * the osc frequency is automatically promoted to a signal, so we
+     * pull it from *in_freq instead of from x_freq.  this is to allow
+     * signal-rate frequency changes.
+     */
+    t_sample *in_freq =  (t_sample *)(w[2]);
+    t_sample *out_osc = (t_sample *)(w[3]);
+    int num_samples = (int)(w[4]);
 
-    tf.tf_d = UNITBIT32;
-    normhipart = tf.tf_i[HIOFFSET];
-    tf.tf_d = dphase;
+    double conv = x->x_conv;
+    double last_phase = x->x_last_phase;
+    double curr_phase = x->x_phase;
+    double out_val;
+    double phase_step;
 
-    while (n--)
+    while (num_samples--)
     {
-        tf.tf_i[HIOFFSET] = normhipart;
-        dphase += *in++ * conv;
-        *out++ = tf.tf_d - UNITBIT32;
-        tf.tf_d = dphase;
+        /* (osc freq / sample rate) */
+        phase_step = *in_freq++ * conv;
+        out_val = (1.0 - (2.0 * curr_phase));
+        out_val += polyblep_sample(curr_phase, phase_step);
+        *out_osc++ = out_val;
+        last_phase = curr_phase;
+        curr_phase += phase_step;
+        if (curr_phase > 1.0) {
+            curr_phase = 0.0;
+        }
     }
-    tf.tf_i[HIOFFSET] = normhipart;
-    x->x_phase = tf.tf_d - UNITBIT32;
+    x->x_phase = curr_phase;
+    x->x_last_phase = last_phase;
     return (w+5);
 }
 
@@ -99,6 +125,7 @@ void *saw_tilde_new(t_floatarg f)
   x->x_out = outlet_new(&x->x_obj, &s_signal);
   x->x_conv = 0;
   x->x_phase = 0;
+  x->x_last_phase = 0;
   return (void *)x;  
 }  
  

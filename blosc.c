@@ -59,7 +59,7 @@ t_int *saw_tilde_perform(t_int *w)
     t_saw_tilde *x = (t_saw_tilde *)(w[1]);
     t_sample *in =  (t_sample *)(w[2]);
     t_sample *out = (t_sample *)(w[3]);
-    int n = (int)(w[4]);
+    int nsamples = (int)(w[4]);
     double dphase = x->x_phase + (double)UNITBIT32;
     union tabfudge tf;
     int normhipart;
