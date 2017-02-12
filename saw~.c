@@ -99,7 +99,7 @@ t_int *saw_tilde_perform(t_int *w)
         last_phase = curr_phase;
         curr_phase += phase_step;
         if (curr_phase > 1.0) {
-            curr_phase = 0.0;
+            curr_phase -= 1.0;
         }
     }
     x->x_phase = curr_phase;
