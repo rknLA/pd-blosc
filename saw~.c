@@ -136,8 +136,12 @@ void saw_tilde_setup(void)
         (t_method)saw_tilde_free,
         sizeof(t_saw_tilde),
         CLASS_DEFAULT,
-        A_DEFFLOAT, 0);
+        A_DEFFLOAT,
+        0);
   class_addmethod(saw_tilde_class,
-          (t_method)saw_tilde_dsp, gensym("dsp"), 0);
+          (t_method)saw_tilde_dsp,
+          gensym("dsp"),
+          A_CANT,
+          0);
   CLASS_MAINSIGNALIN(saw_tilde_class, t_saw_tilde, x_freq);
 }
