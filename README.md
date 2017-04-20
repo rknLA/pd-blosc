@@ -6,6 +6,8 @@ pd-vanilla's limited support of musical oscillators necessitates more musical op
 * `[square~]`
 * `[tri~]`
 
+Currently only `[saw~]` is functional.  `[square~]` and `[tri~]` will be developed soon.
+
 Sine-wave reference:
 - https://gist.github.com/wrl/9913185
 
