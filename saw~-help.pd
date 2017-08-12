@@ -2,25 +2,27 @@
 #X obj 64 95 saw~;
 #X text 13 10 anti-aliased sawtooth oscillator;
 #X obj 64 175 dac~;
-#X floatatom 85 123 5 0 0 0 - - -, f 5;
+#X floatatom 127 123 5 0 0 0 - - -, f 5;
 #X msg 278 75 \; metro 0;
 #X msg 277 16 \; pd dsp 1 \; metro 1;
 #X text 362 35 <-Click to start;
 #X text 355 84 <-Click to stop;
-#N canvas 0 22 450 278 (subpatch) 0;
-#X array array1 100 float 3;
-#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0;
-#X coords 0 1 100 -1 200 140 1;
-#X restore 33 252 graph;
 #X floatatom 64 67 5 0 0 0 - - -, f 5;
 #X obj 64 34 loadbang;
 #X obj 64 147 *~ 1;
-#X connect 0 0 11 0;
-#X connect 3 0 11 1;
-#X connect 9 0 0 0;
-#X connect 10 0 9 0;
-#X connect 11 0 2 0;
-#X connect 11 0 2 1;
+#X obj 213 146 r metro;
+#X obj 213 172 metro 500;
+#N canvas 0 22 450 278 (subpatch) 0;
+#X array saw_array1 1000 float 2;
+#X coords 0 1 1000 -1 200 140 1;
+#X restore 74 286 graph;
+#X obj 213 199 tabwrite~ saw_array1;
+#X connect 0 0 10 0;
+#X connect 0 0 14 0;
+#X connect 3 0 10 1;
+#X connect 8 0 0 0;
+#X connect 9 0 8 0;
+#X connect 10 0 2 0;
+#X connect 10 0 2 1;
+#X connect 11 0 12 0;
+#X connect 12 0 14 0;
